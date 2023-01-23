@@ -27,7 +27,7 @@ public class VillagersPlusClient {
     @SubscribeEvent
     public void initParticles(RegisterParticleProvidersEvent event) {
         event.register(ModParticles.EXPERIENCE_PARTICLE.get(), ExperienceParticle.ExperienceParticleFactory::new);
-        event.register(ModParticles.BUBBLE_PARTICLE.get(), BubbleParticle.Factory::new);
+        event.register(ModParticles.BUBBLE_PARTICLE.get(), BubbleParticle.Provider::new);
     }
 
     @SubscribeEvent

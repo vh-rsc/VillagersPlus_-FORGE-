@@ -21,7 +21,7 @@ public class AlchemistTableScreenHandler extends AbstractContainerMenu {
     }
 
     public AlchemistTableScreenHandler(int syncId, Inventory playerInventory, Container inventory, ContainerData propertyDelegate) {
-        super(ModScreen.ALCHEMIST_TABLE_SCREEN_HANDLER, syncId);
+        super(ModScreen.ALCHEMIST_TABLE_SCREEN_HANDLER.get(), syncId);
         checkContainerSize(inventory, 5);
         checkContainerDataCount(propertyDelegate, 2);
         this.inventory = inventory;
