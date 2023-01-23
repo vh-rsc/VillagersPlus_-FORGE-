@@ -5,36 +5,39 @@ import com.finallion.villagersplus.blocks.OceanographerTableBlock;
 import com.finallion.villagersplus.init.ModTags;
 import com.finallion.villagersplus.mixin.TropicalFishEntityInvoker;
 import com.finallion.villagersplus.util.DuckBucketable;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.CoralFanBlock;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.BlockRenderManager;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.entity.*;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.passive.*;
-import net.minecraft.item.EntityBucketItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
+import com.mojang.authlib.minecraft.client.MinecraftClient;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.animal.TropicalFish;
+import net.minecraft.world.entity.animal.axolotl.Axolotl;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.MobBucketItem;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.CoralFanBlock;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.model.data.ModelData;
+
 
 public class OceanographerTableBlockEntityRenderer implements BlockEntityRenderer<OceanographerTableBlockEntity> {
-    private final BlockRenderManager manager;
+    private final BlockRenderDispatcher manager;
     private final EntityRenderDispatcher entityRenderDispatcher;
-    private final MinecraftClient minecraft;
+    private final Minecraft minecraft;
     private float[] xOffset = new float[]{0.06F, 1.5F, 1.3F, 0.1F};
     private final float[] yOffsetNorth = new float[]{0.45F, 0.75F, 0.3F, 0.45F};
     private final float[] yOffsetSouth = new float[]{0.75F, 0.45F, 0.45F, 0.3F};
@@ -45,22 +48,22 @@ public class OceanographerTableBlockEntityRenderer implements BlockEntityRendere
     private float[] xOffsetFan = new float[]{0.2F, 1.25F, 1.2F, 0.2F};
     private float[] zOffsetFan = new float[]{0.17F, 1.25F, 0.3F, 1.2F};
 
-    public OceanographerTableBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
-        this.minecraft = MinecraftClient.getInstance();
-        this.manager = ctx.getRenderManager();
-        this.entityRenderDispatcher = ctx.getEntityRenderDispatcher();
+    public OceanographerTableBlockEntityRenderer(BlockEntityRendererProvider.Context ctx) {
+        this.minecraft = Minecraft.getInstance();
+        this.manager = ctx.getBlockRenderDispatcher();
+        this.entityRenderDispatcher = ctx.getEntityRenderer();
     }
 
-    public void render(OceanographerTableBlockEntity blockEntity, float f, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, int j) {
-        BlockState blockState = blockEntity.getCachedState();
-        BlockPos pos = blockEntity.getPos();
-        World world = blockEntity.getWorld();
-        DefaultedList<ItemStack> defaultedList = blockEntity.getInventory();
+    public void render(OceanographerTableBlockEntity blockEntity, float f, PoseStack matrixStack, MultiBufferSource vertexConsumerProvider, int i, int j) {
+        BlockState blockState = blockEntity.getBlockState();
+        BlockPos pos = blockEntity.getBlockPos();
+        Level world = blockEntity.getLevel();
+        NonNullList<ItemStack> defaultedList = blockEntity.getItems();
 
         if (blockState.getBlock() instanceof OceanographerTableBlock) {
             float rotation = 0;
             float[] yOffset = new float[4];
-            switch (blockState.get(OceanographerTableBlock.FACING)) {
+            switch (blockState.getValue(OceanographerTableBlock.FACING)) {
                 case EAST -> {
                     rotation = 90.0F;
                     yOffset = yOffsetEast;
@@ -88,9 +91,9 @@ public class OceanographerTableBlockEntityRenderer implements BlockEntityRendere
             }
 
             for (int it = 0; it < 4; it++) {
-                matrixStack.push();
-                Block coral = Block.getBlockFromItem(defaultedList.get(it).getItem());
-                Vec3d offset = coral.getDefaultState().getModelOffset(world, pos);
+                matrixStack.pushPose();
+                Block coral = Block.byItem(defaultedList.get(it).getItem());
+                Vec3 offset = coral.defaultBlockState().getOffset(world, pos);
                 matrixStack.scale(0.4F, 0.4F, 0.4F);
                 if (coral instanceof CoralFanBlock) {
                     matrixStack.translate(-offset.x + xOffsetFan[it], -offset.y + yOffset[it], -offset.z + zOffsetFan[it]);
@@ -98,53 +101,50 @@ public class OceanographerTableBlockEntityRenderer implements BlockEntityRendere
                     matrixStack.translate(-offset.x + xOffset[it], -offset.y + yOffset[it], -offset.z + zOffset[it]);
                 }
                 renderCoral(coral, world, pos, matrixStack, vertexConsumerProvider, j);
-                matrixStack.pop();
+                matrixStack.popPose();
             }
 
 
 
             ItemStack itemStack = defaultedList.get(4);
-            if (itemStack.getItem() instanceof EntityBucketItem bucketItem) {
+            if (itemStack.getItem() instanceof MobBucketItem bucketItem) {
                 Entity fish = ((DuckBucketable) bucketItem).getEntityType().create(world);
 
-                if (fish != null && itemStack.getNbt() != null) {
-                    fish.readNbt(itemStack.getOrCreateNbt());
+                if (fish != null && itemStack.getTag() != null) {
+                    fish.load(itemStack.getOrCreateTag());
 
-                    if (fish instanceof TropicalFishEntity && itemStack.getNbt().contains("BucketVariantTag")) {
-                        int id = itemStack.getNbt().getInt("BucketVariantTag");
-                        DyeColor pattern = TropicalFishEntity.getPatternDyeColor(id);
-                        DyeColor base = TropicalFishEntity.getBaseDyeColor(id);
-                        TropicalFishEntity.Variant variant = new TropicalFishEntity.Variant(TropicalFishEntity.getVariety(id), base, pattern);
-                        ((TropicalFishEntityInvoker) fish).setTropicalFishVariantMixin(variant.getId());
+                    if (fish instanceof TropicalFish && itemStack.getTag().contains("BucketVariantTag")) {
+                        int id = itemStack.getTag().getInt("BucketVariantTag");
+                        ((TropicalFish) fish).setVariant(id);
                     }
                 }
 
-                matrixStack.push();
+                matrixStack.pushPose();
 
                 if (fish != null) {
-                    long time = world.getTime();
+                    long time = world.getGameTime();
                     float g = 0.53125F;
-                    float h = Math.max(fish.getWidth(), fish.getHeight());
+                    float h = Math.max(fish.getBbWidth(), fish.getBbHeight());
                     if ((double) h > 1.0D) {
                         g /= h;
                     }
 
-                    float k = MathHelper.sin(time * 0.1F) / 2.0F + 0.5F;
+                    float k = Mth.sin(time * 0.1F) / 2.0F + 0.5F;
                     k += k * k;
                     matrixStack.translate(0.5D, (double) (0.5F + k * 0.05F), 0.5D);
 
-                    matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation));
+                    matrixStack.mulPose(Vector3f.YP.rotationDegrees(rotation));
                     Vector3f vec3f = new Vector3f(0.5F, 1.0F, 0.5F);
                     vec3f.normalize();
-                    matrixStack.multiply((new Quaternionf()).rotationAxis(h * 0.017453292F, vec3f));
+                    matrixStack.mulPose(vec3f.rotationDegrees(h));
 
-                    if (itemStack.isIn(ModTags.ROTATIONAL_BUCKET_ENTITIES)) {
-                        matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(90.0F));
+                    if (itemStack.is(ModTags.ROTATIONAL_BUCKET_ENTITIES)) {
+                        matrixStack.mulPose(Vector3f.ZP.rotationDegrees(90.0F));
                     }
 
                     matrixStack.scale(g, g, g);
 
-                    if (!(fish instanceof AxolotlEntity)) {
+                    if (!(fish instanceof Axolotl)) {
                         f = (float) time / 4;
                     } else {
                         matrixStack.translate(0.0D, -0.2F, 0.0D);
@@ -156,18 +156,13 @@ public class OceanographerTableBlockEntityRenderer implements BlockEntityRendere
                     this.entityRenderDispatcher.render(fish, 0.0D, 0.0D, 0.0D, 0.0F, f, matrixStack, vertexConsumerProvider, i);
                 }
 
-                matrixStack.pop();
+                matrixStack.popPose();
             }
         }
     }
 
-    private void renderCoral(Block coral, World world, BlockPos pos, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int overlay) {
-        this.manager.getModelRenderer().render(world, this.manager.getModel(coral.getDefaultState()), coral.getDefaultState(), pos, matrixStack, vertexConsumerProvider.getBuffer(RenderLayer.getCutoutMipped()), false, Random.create(), coral.getDefaultState().getRenderingSeed(pos), overlay);
+    private void renderCoral(Block coral, Level world, BlockPos pos, PoseStack matrixStack, MultiBufferSource vertexConsumerProvider, int overlay) {
+        this.manager.getModelRenderer().tesselateBlock(world, this.manager.getBlockModel(coral.defaultBlockState()), coral.defaultBlockState(), pos, matrixStack, vertexConsumerProvider.getBuffer(RenderType.cutoutMipped()), false, RandomSource.create(), coral.defaultBlockState().getSeed(pos), overlay, ModelData.EMPTY, RenderType.cutoutMipped());
     }
-
-    public EntityRendererFactory.Context getEntityRenderer() {
-        return new EntityRendererFactory.Context(minecraft.getEntityRenderDispatcher(), minecraft.getItemRenderer(), minecraft.getBlockRenderManager(), minecraft.getEntityRenderDispatcher().getHeldItemRenderer(), minecraft.getResourceManager(), minecraft.getEntityModelLoader(), minecraft.textRenderer);
-    }
-
 }
 

@@ -1,68 +1,60 @@
 package com.finallion.villagersplus.client.screen;
 
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
-
 import com.finallion.villagersplus.VillagersPlus;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Inventory;
 
-@Environment(EnvType.CLIENT)
-public class AlchemistTableScreen extends HandledScreen<AlchemistTableScreenHandler> {
-    private static final Identifier TEXTURE = new Identifier(VillagersPlus.MOD_ID, "textures/gui/container/alchemist_table.png");
+public class AlchemistTableScreen extends AbstractContainerScreen<AlchemistTableScreenHandler> {
+    private static final ResourceLocation TEXTURE = new ResourceLocation(VillagersPlus.MOD_ID, "textures/gui/container/alchemist_table.png");
     private static final int[] BUBBLE_PROGRESS = new int[]{29, 24, 20, 16, 11, 6, 0};
 
-    public AlchemistTableScreen(AlchemistTableScreenHandler handler, PlayerInventory inventory, Text title) {
+    public AlchemistTableScreen(AlchemistTableScreenHandler handler, Inventory inventory, Component title) {
         super(handler, inventory, title);
     }
 
     protected void init() {
         super.init();
-        this.titleX = (this.backgroundWidth - this.textRenderer.getWidth(this.title)) / 2;
+        this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
     }
 
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.renderBackground(matrices);
-        super.render(matrices, mouseX, mouseY, delta);
-        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+    public void render(PoseStack p_98341_, int p_98342_, int p_98343_, float p_98344_) {
+        this.renderBackground(p_98341_);
+        super.render(p_98341_, p_98342_, p_98343_, p_98344_);
+        this.renderTooltip(p_98341_, p_98342_, p_98343_);
     }
 
-    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
+    protected void renderBg(PoseStack p_98336_, float p_98337_, int p_98338_, int p_98339_) {
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, TEXTURE);
-        int i = (this.width - this.backgroundWidth) / 2;
-        int j = (this.height - this.backgroundHeight) / 2;
-        this.drawTexture(matrices, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight);
-        int k = ((AlchemistTableScreenHandler)this.handler).getFuel();
-        int l = MathHelper.clamp((18 * k + 20 - 1) / 20, 0, 18);
+        int i = (this.width - this.imageWidth) / 2;
+        int j = (this.height - this.imageHeight) / 2;
+        this.blit(p_98336_, i, j, 0, 0, this.imageWidth, this.imageHeight);
+        int k = this.menu.getFuel();
+        int l = Mth.clamp((18 * k + 20 - 1) / 20, 0, 18);
         if (l > 0) {
-            this.drawTexture(matrices, i + 60, j + 44, 176, 29, l, 4);
+            this.blit(p_98336_, i + 60, j + 44, 176, 29, l, 4);
         }
 
-        int m = ((AlchemistTableScreenHandler)this.handler).getBrewTime();
-        if (m > 0) {
-            int n = (int)(28.0F * (1.0F - (float)m / 400.0F));
-            if (n > 0) {
-                this.drawTexture(matrices, i + 97, j + 16, 176, 0, 9, n);
+        int i1 = this.menu.getBrewTime();
+        if (i1 > 0) {
+            int j1 = (int)(28.0F * (1.0F - (float)i1 / 400.0F));
+            if (j1 > 0) {
+                this.blit(p_98336_, i + 97, j + 16, 176, 0, 9, j1);
             }
 
-            n = BUBBLE_PROGRESS[m / 2 % 7];
-            if (n > 0) {
-                this.drawTexture(matrices, i + 63, j + 14 + 29 - n, 185, 29 - n, 12, n);
+            j1 = BUBBLE_PROGRESS[i1 / 2 % 7];
+            if (j1 > 0) {
+                this.blit(p_98336_, i + 63, j + 14 + 29 - j1, 185, 29 - j1, 12, j1);
             }
         }
+
 
     }
 }

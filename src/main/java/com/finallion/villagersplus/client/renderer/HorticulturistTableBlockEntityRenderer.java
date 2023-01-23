@@ -3,156 +3,160 @@ package com.finallion.villagersplus.client.renderer;
 import com.finallion.villagersplus.blockentities.HorticulturistTableBlockEntity;
 import com.finallion.villagersplus.blocks.HorticulturistTableBlock;
 import com.finallion.villagersplus.init.ModTags;
-import net.minecraft.block.*;
-import net.minecraft.block.enums.DoubleBlockHalf;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.BlockRenderManager;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.TallFlowerBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.model.data.ModelData;
 
 public class HorticulturistTableBlockEntityRenderer implements BlockEntityRenderer<HorticulturistTableBlockEntity> {
-    private final BlockRenderManager manager;
+    private final BlockRenderDispatcher manager;
 
-    public HorticulturistTableBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
-        this.manager = ctx.getRenderManager();
+    public HorticulturistTableBlockEntityRenderer(BlockEntityRendererProvider.Context ctx) {
+        this.manager = ctx.getBlockRenderDispatcher();
     }
 
-    public void render(HorticulturistTableBlockEntity blockEntity, float f, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, int j) {
-        BlockState blockState = blockEntity.getCachedState();
-        BlockPos pos = blockEntity.getPos();
-        DefaultedList<ItemStack> defaultedList = blockEntity.getInventory();
+    public void render(HorticulturistTableBlockEntity blockEntity, float f, PoseStack matrixStack, MultiBufferSource vertexConsumerProvider, int i, int j) {
+        BlockState blockState = blockEntity.getBlockState();
+        BlockPos pos = blockEntity.getBlockPos();
+        NonNullList<ItemStack> defaultedList = blockEntity.getItems();
 
         if (blockState.getBlock() instanceof HorticulturistTableBlock) {
-            matrixStack.push();
-            if (blockState.get(HorticulturistTableBlock.IS_TALL_FLOWER)) {
-                Block flower = Block.getBlockFromItem(defaultedList.get(0).getItem());
-                if (flower instanceof TallPlantBlock) {
-                    Vec3d offset = flower.getDefaultState().getModelOffset(blockEntity.getWorld(), pos);
+            matrixStack.pushPose();
+            if (blockState.getValue(HorticulturistTableBlock.IS_TALL_FLOWER)) {
+                Block flower = Block.byItem(defaultedList.get(0).getItem());
+                if (flower instanceof TallFlowerBlock) {
+                    Vec3 offset = flower.defaultBlockState().getOffset(blockEntity.getLevel(), pos);
                     matrixStack.translate(-offset.x, -offset.y + 0.95D, -offset.z);
-                    renderTallFlower(flower.getDefaultState().getBlock(), blockEntity.getWorld(), pos, matrixStack, vertexConsumerProvider, true, j);
+                    renderTallFlower(flower.defaultBlockState().getBlock(), blockEntity.getLevel(), pos, matrixStack, vertexConsumerProvider, true, j);
                     matrixStack.translate(-offset.x, -offset.y + 1.0D, -offset.z);
-                    renderTallFlower(flower.getDefaultState().getBlock(), blockEntity.getWorld(), pos, matrixStack, vertexConsumerProvider, false, j);
+                    renderTallFlower(flower.defaultBlockState().getBlock(), blockEntity.getLevel(), pos, matrixStack, vertexConsumerProvider, false, j);
                 } else {
-                    Block flowerOne = Block.getBlockFromItem(defaultedList.get(0).getItem());
-                    if (flowerOne.getDefaultState().isOf(Blocks.CACTUS)) {
+                    Block flowerOne = Block.byItem(defaultedList.get(0).getItem());
+                    if (flowerOne.defaultBlockState().is(Blocks.CACTUS)) {
                         matrixStack.scale(0.75F, 0.75F, 0.75F);
                         matrixStack.translate(0.15D, 0.15D, 0.15D);
                     }
 
-                    Vec3d offset = flowerOne.getDefaultState().getModelOffset(blockEntity.getWorld(), pos);
+                    Vec3 offset = flowerOne.defaultBlockState().getOffset(blockEntity.getLevel(), pos);
                     matrixStack.translate(-offset.x, -offset.y + 0.95D, -offset.z);
-                    renderFlower(Block.getBlockFromItem(defaultedList.get(0).getItem()), blockEntity.getWorld(), pos, matrixStack, vertexConsumerProvider, j);
+                    renderFlower(Block.byItem(defaultedList.get(0).getItem()), blockEntity.getLevel(), pos, matrixStack, vertexConsumerProvider, j);
                 }
             } else {
-                switch (blockState.get(HorticulturistTableBlock.FLOWERS)) {
+                switch (blockState.getValue(HorticulturistTableBlock.FLOWERS)) {
                     case 1 -> {
-                        Block flowerOne = Block.getBlockFromItem(defaultedList.get(0).getItem());
-                        Vec3d offset = flowerOne.getDefaultState().getModelOffset(blockEntity.getWorld(), pos);
+                        Block flowerOne = Block.byItem(defaultedList.get(0).getItem());
+                        Vec3 offset = flowerOne.defaultBlockState().getOffset(blockEntity.getLevel(), pos);
                         matrixStack.translate(-offset.x, -offset.y + 0.95D, -offset.z);
-                        renderFlower(flowerOne, blockEntity.getWorld(), pos, matrixStack, vertexConsumerProvider, j);
+                        renderFlower(flowerOne, blockEntity.getLevel(), pos, matrixStack, vertexConsumerProvider, j);
                     }
                     case 2 -> {
-                        Block flowerOne = Block.getBlockFromItem(defaultedList.get(0).getItem());
-                        Block flowerTwo = Block.getBlockFromItem(defaultedList.get(1).getItem());
-                        Vec3d offset = flowerOne.getDefaultState().getModelOffset(blockEntity.getWorld(), pos);
-                        Vec3d offset2 = flowerTwo.getDefaultState().getModelOffset(blockEntity.getWorld(), pos);
+                        Block flowerOne = Block.byItem(defaultedList.get(0).getItem());
+                        Block flowerTwo = Block.byItem(defaultedList.get(1).getItem());
+                        Vec3 offset = flowerOne.defaultBlockState().getOffset(blockEntity.getLevel(), pos);
+                        Vec3 offset2 = flowerTwo.defaultBlockState().getOffset(blockEntity.getLevel(), pos);
                         matrixStack.translate(-offset.x + 0.15D, -offset.y + 0.95D, -offset.z + 0.15D);
-                        if (flowerOne.getDefaultState().isIn(ModTags.SCALABLE_BLOCKS)) {
+                        if (flowerOne.defaultBlockState().is(ModTags.SCALABLE_BLOCKS)) {
                             matrixStack.scale(0.75F, 0.75F, 0.75F);
                             matrixStack.translate(0, 0.15D, 0);
                         }
-                        renderFlower(flowerOne, blockEntity.getWorld(), pos, matrixStack, vertexConsumerProvider, j);
+                        renderFlower(flowerOne, blockEntity.getLevel(), pos, matrixStack, vertexConsumerProvider, j);
                         matrixStack.translate(-offset2.x - 0.3D, -offset2.y, -offset2.z - 0.3D - 0.05D);
-                        if (flowerTwo.getDefaultState().isIn(ModTags.SCALABLE_BLOCKS)) {
+                        if (flowerTwo.defaultBlockState().is(ModTags.SCALABLE_BLOCKS)) {
                             matrixStack.scale(0.75F, 0.75F, 0.75F);
                             matrixStack.translate(0, 0.15D, 0);
                         }
-                        renderFlower(flowerTwo, blockEntity.getWorld(), pos, matrixStack, vertexConsumerProvider, j);
+                        renderFlower(flowerTwo, blockEntity.getLevel(), pos, matrixStack, vertexConsumerProvider, j);
                     }
                     case 3 -> {
-                        Block flowerOne = Block.getBlockFromItem(defaultedList.get(0).getItem());
-                        Block flowerTwo = Block.getBlockFromItem(defaultedList.get(1).getItem());
-                        Block flowerThree = Block.getBlockFromItem(defaultedList.get(2).getItem());
-                        Vec3d offset = flowerOne.getDefaultState().getModelOffset(blockEntity.getWorld(), pos);
-                        Vec3d offset2 = flowerTwo.getDefaultState().getModelOffset(blockEntity.getWorld(), pos);
-                        Vec3d offset3 = flowerThree.getDefaultState().getModelOffset(blockEntity.getWorld(), pos);
+                        Block flowerOne = Block.byItem(defaultedList.get(0).getItem());
+                        Block flowerTwo = Block.byItem(defaultedList.get(1).getItem());
+                        Block flowerThree = Block.byItem(defaultedList.get(2).getItem());
+                        Vec3 offset = flowerOne.defaultBlockState().getOffset(blockEntity.getLevel(), pos);
+                        Vec3 offset2 = flowerTwo.defaultBlockState().getOffset(blockEntity.getLevel(), pos);
+                        Vec3 offset3 = flowerThree.defaultBlockState().getOffset(blockEntity.getLevel(), pos);
                         matrixStack.translate(-offset.x + 0.15D, -offset.y + 0.95D, -offset.z);
-                        if (flowerOne.getDefaultState().isIn(ModTags.SCALABLE_BLOCKS)) {
+                        if (flowerOne.defaultBlockState().is(ModTags.SCALABLE_BLOCKS)) {
                             matrixStack.scale(0.6F, 0.6F, 0.6F);
                             matrixStack.translate(0, 0.2D, 0);
                         }
-                        renderFlower(flowerOne, blockEntity.getWorld(), pos, matrixStack, vertexConsumerProvider, j);
+                        renderFlower(flowerOne, blockEntity.getLevel(), pos, matrixStack, vertexConsumerProvider, j);
                         matrixStack.translate(-offset2.x - 0.3D, -offset2.y - 0.05D, -offset2.z - 0.15D);
-                        if (flowerTwo.getDefaultState().isIn(ModTags.SCALABLE_BLOCKS)) {
+                        if (flowerTwo.defaultBlockState().is(ModTags.SCALABLE_BLOCKS)) {
                             matrixStack.scale(0.6F, 0.6F, 0.6F);
                             matrixStack.translate(0, 0.2D, 0);
                         }
-                        renderFlower(flowerTwo, blockEntity.getWorld(), pos, matrixStack, vertexConsumerProvider, j);
+                        renderFlower(flowerTwo, blockEntity.getLevel(), pos, matrixStack, vertexConsumerProvider, j);
                         matrixStack.translate(-offset3.x -0.05D, -offset3.y + 0, -offset3.z + 0.3D);
-                        if (flowerThree.getDefaultState().isIn(ModTags.SCALABLE_BLOCKS)) {
+                        if (flowerThree.defaultBlockState().is(ModTags.SCALABLE_BLOCKS)) {
                             matrixStack.scale(0.6F, 0.6F, 0.6F);
                             matrixStack.translate(0, 0.2D, 0);
                         }
-                        renderFlower(flowerThree, blockEntity.getWorld(), pos, matrixStack, vertexConsumerProvider, j);
+                        renderFlower(flowerThree, blockEntity.getLevel(), pos, matrixStack, vertexConsumerProvider, j);
                     }
                     case 4 -> {
-                        Block flowerOne = Block.getBlockFromItem(defaultedList.get(0).getItem());
-                        Block flowerTwo = Block.getBlockFromItem(defaultedList.get(1).getItem());
-                        Block flowerThree = Block.getBlockFromItem(defaultedList.get(2).getItem());
-                        Block flowerFour = Block.getBlockFromItem(defaultedList.get(3).getItem());
-                        Vec3d offset = flowerOne.getDefaultState().getModelOffset(blockEntity.getWorld(), pos);
-                        Vec3d offset2 = flowerTwo.getDefaultState().getModelOffset(blockEntity.getWorld(), pos);
-                        Vec3d offset3 = flowerThree.getDefaultState().getModelOffset(blockEntity.getWorld(), pos);
-                        Vec3d offset4 = flowerFour.getDefaultState().getModelOffset(blockEntity.getWorld(), pos);
+                        Block flowerOne = Block.byItem(defaultedList.get(0).getItem());
+                        Block flowerTwo = Block.byItem(defaultedList.get(1).getItem());
+                        Block flowerThree = Block.byItem(defaultedList.get(2).getItem());
+                        Block flowerFour = Block.byItem(defaultedList.get(3).getItem());
+                        Vec3 offset = flowerOne.defaultBlockState().getOffset(blockEntity.getLevel(), pos);
+                        Vec3 offset2 = flowerTwo.defaultBlockState().getOffset(blockEntity.getLevel(), pos);
+                        Vec3 offset3 = flowerThree.defaultBlockState().getOffset(blockEntity.getLevel(), pos);
+                        Vec3 offset4 = flowerFour.defaultBlockState().getOffset(blockEntity.getLevel(), pos);
                         matrixStack.translate(-offset.x + 0.15D, -offset.y + 0.95D, -offset.z + 0.15D);
-                        if (flowerOne.getDefaultState().isIn(ModTags.SCALABLE_BLOCKS)) {
+                        if (flowerOne.defaultBlockState().is(ModTags.SCALABLE_BLOCKS)) {
                             matrixStack.scale(0.5F, 0.5F, 0.5F);
                             matrixStack.translate(0, 0.25D, 0);
                         }
-                        renderFlower(flowerOne, blockEntity.getWorld(), pos, matrixStack, vertexConsumerProvider, j);
+                        renderFlower(flowerOne, blockEntity.getLevel(), pos, matrixStack, vertexConsumerProvider, j);
                         matrixStack.translate(-offset2.x, -offset2.y - 0.05D, -offset2.z - 0.3D - 0.05D);
-                        if (flowerTwo.getDefaultState().isIn(ModTags.SCALABLE_BLOCKS)) {
+                        if (flowerTwo.defaultBlockState().is(ModTags.SCALABLE_BLOCKS)) {
                             matrixStack.scale(0.5F, 0.5F, 0.5F);
                             matrixStack.translate(0, 0.25D, 0);
                         }
-                        renderFlower(Block.getBlockFromItem(defaultedList.get(1).getItem()), blockEntity.getWorld(), pos, matrixStack, vertexConsumerProvider, j);
+                        renderFlower(Block.byItem(defaultedList.get(1).getItem()), blockEntity.getLevel(), pos, matrixStack, vertexConsumerProvider, j);
                         matrixStack.translate(-offset3.x - 0.3D, -offset3.y + 0, -offset3.z);
-                        if (flowerThree.getDefaultState().isIn(ModTags.SCALABLE_BLOCKS)) {
+                        if (flowerThree.defaultBlockState().is(ModTags.SCALABLE_BLOCKS)) {
                             matrixStack.scale(0.5F, 0.5F, 0.5F);
                             matrixStack.translate(0, 0.25D, 0);
                         }
-                        renderFlower(Block.getBlockFromItem(defaultedList.get(2).getItem()), blockEntity.getWorld(), pos, matrixStack, vertexConsumerProvider, j);
+                        renderFlower(Block.byItem(defaultedList.get(2).getItem()), blockEntity.getLevel(), pos, matrixStack, vertexConsumerProvider, j);
                         matrixStack.translate(-offset4.x - 0.05D, -offset4.y - 0.05D, -offset4.z + 0.37D);
-                        if (flowerFour.getDefaultState().isIn(ModTags.SCALABLE_BLOCKS)) {
+                        if (flowerFour.defaultBlockState().is(ModTags.SCALABLE_BLOCKS)) {
                             matrixStack.scale(0.5F, 0.5F, 0.5F);
                             matrixStack.translate(0, 0.25D, 0);
                         }
-                        renderFlower(Block.getBlockFromItem(defaultedList.get(3).getItem()), blockEntity.getWorld(), pos, matrixStack, vertexConsumerProvider, j);
+                        renderFlower(Block.byItem(defaultedList.get(3).getItem()), blockEntity.getLevel(), pos, matrixStack, vertexConsumerProvider, j);
                     }
                 }
             }
-            matrixStack.pop();
+            matrixStack.popPose();
         }
     }
 
-    private void renderFlower(Block flower, World world, BlockPos pos, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int overlay) {
-        this.manager.getModelRenderer().render(world, this.manager.getModel(flower.getDefaultState()), flower.getDefaultState(), pos, matrixStack, vertexConsumerProvider.getBuffer(RenderLayer.getCutoutMipped()), false, Random.create(), flower.getDefaultState().getRenderingSeed(pos), overlay);
+    private void renderFlower(Block flower, Level world, BlockPos pos, PoseStack matrixStack, MultiBufferSource vertexConsumerProvider, int overlay) {
+        this.manager.getModelRenderer().tesselateBlock(world, this.manager.getBlockModel(flower.defaultBlockState()), flower.defaultBlockState(), pos, matrixStack, vertexConsumerProvider.getBuffer(RenderType.cutoutMipped()), false, RandomSource.create(), flower.defaultBlockState().getSeed(pos), overlay, ModelData.EMPTY, RenderType.cutoutMipped());
     }
 
 
-    private void renderTallFlower(Block flower, World world, BlockPos pos, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, boolean lower, int overlay) {
+    private void renderTallFlower(Block flower, Level world, BlockPos pos, PoseStack matrixStack, MultiBufferSource vertexConsumerProvider, boolean lower, int overlay) {
         if (lower) {
-            this.manager.getModelRenderer().render(world, this.manager.getModel(flower.getDefaultState().with(TallPlantBlock.HALF, DoubleBlockHalf.LOWER)), flower.getDefaultState(), pos, matrixStack, vertexConsumerProvider.getBuffer(RenderLayer.getCutoutMipped()), false, Random.create(), flower.getDefaultState().getRenderingSeed(pos), overlay);
+            this.manager.getModelRenderer().tesselateBlock(world, this.manager.getBlockModel(flower.defaultBlockState().setValue(TallFlowerBlock.HALF, DoubleBlockHalf.LOWER)), flower.defaultBlockState(), pos, matrixStack, vertexConsumerProvider.getBuffer(RenderType.cutoutMipped()), false, RandomSource.create(), flower.defaultBlockState().getSeed(pos), overlay, ModelData.EMPTY, RenderType.cutoutMipped());
         } else {
-            this.manager.getModelRenderer().render(world, this.manager.getModel(flower.getDefaultState().with(TallPlantBlock.HALF, DoubleBlockHalf.UPPER)), flower.getDefaultState(), pos, matrixStack, vertexConsumerProvider.getBuffer(RenderLayer.getCutoutMipped()), false, Random.create(), flower.getDefaultState().getRenderingSeed(pos), overlay);
+            this.manager.getModelRenderer().tesselateBlock(world, this.manager.getBlockModel(flower.defaultBlockState().setValue(TallFlowerBlock.HALF, DoubleBlockHalf.UPPER)), flower.defaultBlockState(), pos, matrixStack, vertexConsumerProvider.getBuffer(RenderType.cutoutMipped()), false, RandomSource.create(), flower.defaultBlockState().getSeed(pos), overlay, ModelData.EMPTY, RenderType.cutoutMipped());
         }
     }
 }

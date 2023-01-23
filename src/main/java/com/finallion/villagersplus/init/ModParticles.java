@@ -1,19 +1,17 @@
 package com.finallion.villagersplus.init;
 
 import com.finallion.villagersplus.VillagersPlus;
-import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
-import net.minecraft.particle.DefaultParticleType;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class ModParticles {
+    public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, VillagersPlus.MOD_ID);
 
-    public static final DefaultParticleType EXPERIENCE_PARTICLE = FabricParticleTypes.simple();
-    public static final DefaultParticleType BUBBLE_PARTICLE = FabricParticleTypes.simple();
 
-    public static void init() {
-        Registry.register(Registries.PARTICLE_TYPE, new Identifier(VillagersPlus.MOD_ID, "experience_particle"), EXPERIENCE_PARTICLE);
-        Registry.register(Registries.PARTICLE_TYPE, new Identifier(VillagersPlus.MOD_ID, "bubble_particle"), BUBBLE_PARTICLE);
-    }
+    public static final RegistryObject<SimpleParticleType> EXPERIENCE_PARTICLE = PARTICLES.register("villagersplus:experience_particle", () -> new SimpleParticleType(true));
+    public static final RegistryObject<SimpleParticleType> BUBBLE_PARTICLE = PARTICLES.register("villagersplus:bubble_particle", () -> new SimpleParticleType(true));
+
 }
