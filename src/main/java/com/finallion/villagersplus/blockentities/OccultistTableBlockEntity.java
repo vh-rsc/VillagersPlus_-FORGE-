@@ -14,7 +14,7 @@ public class OccultistTableBlockEntity extends BlockEntity {
     private final int AMOUNT = 50;
 
     public OccultistTableBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlocks.OCCULTIST_TABLE_BLOCK_ENTITY, pos, state);
+        super(ModBlocks.OCCULTIST_TABLE_BLOCK_ENTITY.get(), pos, state);
     }
 
     public int getLevels() {

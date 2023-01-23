@@ -23,7 +23,7 @@ public class HorticulturistTableBlockEntity extends BlockEntity implements Conta
     private static final int[] SLOTS = new int[]{0, 1, 2, 3};
 
     public HorticulturistTableBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlocks.HORTICULTURIST_TABLE_BLOCK_ENTITY, pos, state);
+        super(ModBlocks.HORTICULTURIST_TABLE_BLOCK_ENTITY.get(), pos, state);
         this.inventory = NonNullList.withSize(4, ItemStack.EMPTY);
     }
 

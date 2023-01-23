@@ -1,24 +1,57 @@
 package com.finallion.villagersplus;
 
+import com.finallion.villagersplus.client.VillagersPlusClient;
 import com.finallion.villagersplus.init.*;
 import com.finallion.villagersplus.villagers.ModPointOfInterestType;
 import com.finallion.villagersplus.villagers.ModProfessions;
-import com.finallion.villagersplus.villagers.ModTrades;
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
+import net.minecraftforge.event.server.ServerStartingEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class VillagersPlus implements ModInitializer {
+@Mod(VillagersPlus.MOD_ID)
+public class VillagersPlus {
 	public static final Logger LOGGER = LoggerFactory.getLogger("villagersplus");
 	public static final String MOD_ID = "villagersplus";
 
+	public VillagersPlus() {
+		DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> VillagersPlusClient::new);
 
+		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+		ModBlocks.BLOCKS.register(modEventBus);
+		ModItems.ITEMS.register(modEventBus);
+		ModBlocks.TILE_ENTITIES.register(modEventBus);
+		ModScreen.MENUS.register(modEventBus);
+		ModParticles.PARTICLES.register(modEventBus);
+		ModPointOfInterestType.POI_TYPES.register(modEventBus);
+		ModProfessions.VILLAGER_PROFESSIONS.register(modEventBus);
+	}
+
+	@SubscribeEvent
+	public void onServerAboutToStartEvent(ServerAboutToStartEvent event) {
+		ModStructures.registerJigsaws(event.getServer());
+	}
+
+	public static final CreativeModeTab GROUP = new CreativeModeTab ("group") {
+		@Override
+		public ItemStack makeIcon() {
+			return new ItemStack(ModBlocks.OAK_HORTICULTURIST_TABLE_BLOCK.get());
+		}
+
+	};
+
+
+/*
 	public static ItemGroup ITEM_GROUP = FabricItemGroup.builder(new Identifier(MOD_ID, "group"))
 			.displayName(Text.literal("VillagersPlus"))
 			.icon(() -> new ItemStack(ModBlocks.OAK_HORTICULTURIST_TABLE_BLOCK))
@@ -39,17 +72,6 @@ public class VillagersPlus implements ModInitializer {
 			})
 			.build();
 
-	@Override
-	public void onInitialize() {
-		ModTags.init();
-		ModScreen.init();
-		ModParticles.init();
-		ModBlocks.registerBlocks();
-		ModPointOfInterestType.registerPOIs();
-		ModProfessions.registerProfessions();
-		ModTrades.registerTradeOffers();
+ */
 
-		ServerLifecycleEvents.SERVER_STARTING.register(ModStructures::registerJigsaws);
-
-	}
 }

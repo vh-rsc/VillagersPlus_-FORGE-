@@ -2,30 +2,27 @@ package com.finallion.villagersplus.villagers;
 
 import com.finallion.villagersplus.VillagersPlus;
 import com.google.common.collect.ImmutableSet;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Identifier;
-import net.minecraft.village.VillagerProfession;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class ModProfessions {
 
-    public static VillagerProfession HORTICULTURIST;
-    public static VillagerProfession OCCULTIST;
-    public static VillagerProfession OCEANOGRAPHER;
-    public static VillagerProfession ALCHEMIST;
+    public static final DeferredRegister<VillagerProfession> VILLAGER_PROFESSIONS = DeferredRegister.create(ForgeRegistries.VILLAGER_PROFESSIONS, VillagersPlus.MOD_ID);
 
-    public static void registerProfessions() {
-        HORTICULTURIST = Registry.register(Registries.VILLAGER_PROFESSION, new Identifier(VillagersPlus.MOD_ID, "horticulturist"),
-                new VillagerProfession("horticulturist", holder -> holder.value().equals(ModPointOfInterestType.HORTICULTURIST_POI), holder -> holder.value().equals(ModPointOfInterestType.HORTICULTURIST_POI), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.ENTITY_VILLAGER_WORK_FARMER));
-        OCCULTIST = Registry.register(Registries.VILLAGER_PROFESSION, new Identifier(VillagersPlus.MOD_ID, "occultist"),
-                new VillagerProfession("occultist", holder -> holder.value().equals(ModPointOfInterestType.OCCULTIST_POI), holder -> holder.value().equals(ModPointOfInterestType.OCCULTIST_POI), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.ENTITY_VILLAGER_WORK_CLERIC));
-        OCEANOGRAPHER = Registry.register(Registries.VILLAGER_PROFESSION, new Identifier(VillagersPlus.MOD_ID, "oceanographer"),
-                new VillagerProfession("oceanographer", holder -> holder.value().equals(ModPointOfInterestType.OCEANOGRAPHER_POI), holder -> holder.value().equals(ModPointOfInterestType.OCEANOGRAPHER_POI), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.ITEM_BUCKET_FILL));
-        ALCHEMIST = Registry.register(Registries.VILLAGER_PROFESSION, new Identifier(VillagersPlus.MOD_ID, "alchemist"),
-                new VillagerProfession("alchemist", holder -> holder.value().equals(ModPointOfInterestType.ALCHEMIST_POI), holder -> holder.value().equals(ModPointOfInterestType.ALCHEMIST_POI), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.ENTITY_VILLAGER_WORK_CLERIC));
+    public static RegistryObject<VillagerProfession> HORTICULTURIST = VILLAGER_PROFESSIONS.register("horticulturist", () ->
+                new VillagerProfession("horticulturist", holder -> holder.value().equals(ModPointOfInterestType.HORTICULTURIST_POI.get()), holder -> holder.value().equals(ModPointOfInterestType.HORTICULTURIST_POI.get()), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_FARMER));
+    public static RegistryObject<VillagerProfession> OCCULTIST = VILLAGER_PROFESSIONS.register("occultist", () ->
+                new VillagerProfession("occultist", holder -> holder.value().equals(ModPointOfInterestType.OCCULTIST_POI.get()), holder -> holder.value().equals(ModPointOfInterestType.OCCULTIST_POI.get()), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_CLERIC));
+    public static RegistryObject<VillagerProfession> OCEANOGRAPHER = VILLAGER_PROFESSIONS.register("oceanographer", () ->
+                new VillagerProfession("oceanographer", holder -> holder.value().equals(ModPointOfInterestType.OCEANOGRAPHER_POI.get()), holder -> holder.value().equals(ModPointOfInterestType.OCEANOGRAPHER_POI.get()), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.BUCKET_FILL));
+    public static RegistryObject<VillagerProfession> ALCHEMIST = VILLAGER_PROFESSIONS.register("alchemist", () ->
+                new VillagerProfession("alchemist", holder -> holder.value().equals(ModPointOfInterestType.ALCHEMIST_POI.get()), holder -> holder.value().equals(ModPointOfInterestType.ALCHEMIST_POI.get()), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_CLERIC));
 
-    }
 
 
 }

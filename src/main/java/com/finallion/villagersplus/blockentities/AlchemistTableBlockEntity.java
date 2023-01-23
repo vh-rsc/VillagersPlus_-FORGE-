@@ -156,7 +156,7 @@ public class AlchemistTableBlockEntity extends BaseContainerBlockEntity implemen
 
 
     public AlchemistTableBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlocks.ALCHEMIST_TABLE_BLOCK_ENTITY, pos, state);
+        super(ModBlocks.ALCHEMIST_TABLE_BLOCK_ENTITY.get(), pos, state);
     }
 
 

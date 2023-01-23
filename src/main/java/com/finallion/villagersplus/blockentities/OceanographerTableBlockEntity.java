@@ -22,7 +22,7 @@ public class OceanographerTableBlockEntity extends BlockEntity implements Contai
     private static final int[] SLOTS = new int[]{0, 1, 2, 3, 4};
 
     public OceanographerTableBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlocks.OCEANOGRAPHER_TABLE_BLOCK_ENTITY, pos, state);
+        super(ModBlocks.OCEANOGRAPHER_TABLE_BLOCK_ENTITY.get(), pos, state);
         this.inventory = NonNullList.withSize(5, ItemStack.EMPTY);
     }
 
