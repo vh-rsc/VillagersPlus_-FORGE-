@@ -7,6 +7,7 @@ import com.finallion.villagersplus.villagers.ModProfessions;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -24,6 +25,7 @@ public class VillagersPlus {
 	public static final String MOD_ID = "villagersplus";
 
 	public VillagersPlus() {
+		MinecraftForge.EVENT_BUS.register(this);
 		DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> VillagersPlusClient::new);
 
 		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -41,6 +43,7 @@ public class VillagersPlus {
 	public void onServerAboutToStartEvent(ServerAboutToStartEvent event) {
 		ModStructures.registerJigsaws(event.getServer());
 	}
+
 
 	public static final CreativeModeTab GROUP = new CreativeModeTab ("group") {
 		@Override

@@ -13,16 +13,19 @@ import java.util.function.Supplier;
 
 @Mixin(MobBucketItem.class)
 public class EntityBucketItemMixin extends BucketItem implements DuckBucketable {
+    @Final
+    @Shadow
+    private Supplier<? extends EntityType<?>> entityTypeSupplier;
 
     public EntityBucketItemMixin(Fluid p_40689_, Properties p_40690_) {
         super(p_40689_, p_40690_);
     }
 
-    @Final
-    @Shadow
-    private Supplier<? extends EntityType<?>> entityTypeSupplier;
+    public EntityBucketItemMixin(Supplier<? extends Fluid> supplier, Properties builder) {
+        super(supplier, builder);
+    }
 
-
+    @Override
     public EntityType<?> getEntityType() {
         return entityTypeSupplier.get();
     }

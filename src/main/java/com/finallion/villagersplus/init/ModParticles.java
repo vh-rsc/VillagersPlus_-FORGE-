@@ -11,7 +11,7 @@ public class ModParticles {
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, VillagersPlus.MOD_ID);
 
 
-    public static final RegistryObject<SimpleParticleType> EXPERIENCE_PARTICLE = PARTICLES.register("villagersplus:experience_particle", () -> new SimpleParticleType(true));
-    public static final RegistryObject<SimpleParticleType> BUBBLE_PARTICLE = PARTICLES.register("villagersplus:bubble_particle", () -> new SimpleParticleType(true));
+    public static final RegistryObject<SimpleParticleType> EXPERIENCE_PARTICLE = PARTICLES.register("experience_particle", () -> new SimpleParticleType(true));
+    public static final RegistryObject<SimpleParticleType> BUBBLE_PARTICLE = PARTICLES.register("bubble_particle", () -> new SimpleParticleType(true));
 
 }

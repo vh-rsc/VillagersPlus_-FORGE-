@@ -18,7 +18,7 @@ public class BubbleParticle extends TextureSheetParticle {
         this.xd = g * 0.20000000298023224D + (Math.random() * 2.0D - 1.0D) * 0.019999999552965164D;
         this.yd = h * 0.00500000298023224D;
         this.zd = i * 0.20000000298023224D + (Math.random() * 2.0D - 1.0D) * 0.019999999552965164D;
-        this.lifetime = (int)(8.0D / (Math.random() * 0.8D + 0.2D));
+        this.lifetime = (int)(80.0D / (Math.random() * 0.8D + 0.2D));
     }
 
 

@@ -16,6 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.TallFlowerBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
@@ -38,7 +39,7 @@ public class HorticulturistTableBlockEntityRenderer implements BlockEntityRender
             matrixStack.pushPose();
             if (blockState.getValue(HorticulturistTableBlock.IS_TALL_FLOWER)) {
                 Block flower = Block.byItem(defaultedList.get(0).getItem());
-                if (flower instanceof TallFlowerBlock) {
+                if (flower instanceof DoublePlantBlock) {
                     Vec3 offset = flower.defaultBlockState().getOffset(blockEntity.getLevel(), pos);
                     matrixStack.translate(-offset.x, -offset.y + 0.95D, -offset.z);
                     renderTallFlower(flower.defaultBlockState().getBlock(), blockEntity.getLevel(), pos, matrixStack, vertexConsumerProvider, true, j);
@@ -100,7 +101,7 @@ public class HorticulturistTableBlockEntityRenderer implements BlockEntityRender
                             matrixStack.translate(0, 0.2D, 0);
                         }
                         renderFlower(flowerTwo, blockEntity.getLevel(), pos, matrixStack, vertexConsumerProvider, j);
-                        matrixStack.translate(-offset3.x -0.05D, -offset3.y + 0, -offset3.z + 0.3D);
+                        matrixStack.translate(-offset3.x - 0.05D, -offset3.y + 0, -offset3.z + 0.3D);
                         if (flowerThree.defaultBlockState().is(ModTags.SCALABLE_BLOCKS)) {
                             matrixStack.scale(0.6F, 0.6F, 0.6F);
                             matrixStack.translate(0, 0.2D, 0);
@@ -148,15 +149,15 @@ public class HorticulturistTableBlockEntityRenderer implements BlockEntityRender
     }
 
     private void renderFlower(Block flower, Level world, BlockPos pos, PoseStack matrixStack, MultiBufferSource vertexConsumerProvider, int overlay) {
-        this.manager.getModelRenderer().tesselateBlock(world, this.manager.getBlockModel(flower.defaultBlockState()), flower.defaultBlockState(), pos, matrixStack, vertexConsumerProvider.getBuffer(RenderType.cutoutMipped()), false, RandomSource.create(), flower.defaultBlockState().getSeed(pos), overlay, ModelData.EMPTY, RenderType.cutoutMipped());
+        this.manager.getModelRenderer().tesselateBlock(world, this.manager.getBlockModel(flower.defaultBlockState()), flower.defaultBlockState(), pos, matrixStack, vertexConsumerProvider.getBuffer(RenderType.cutoutMipped()), false, RandomSource.create(), flower.defaultBlockState().getSeed(pos), overlay);
     }
 
 
     private void renderTallFlower(Block flower, Level world, BlockPos pos, PoseStack matrixStack, MultiBufferSource vertexConsumerProvider, boolean lower, int overlay) {
         if (lower) {
-            this.manager.getModelRenderer().tesselateBlock(world, this.manager.getBlockModel(flower.defaultBlockState().setValue(TallFlowerBlock.HALF, DoubleBlockHalf.LOWER)), flower.defaultBlockState(), pos, matrixStack, vertexConsumerProvider.getBuffer(RenderType.cutoutMipped()), false, RandomSource.create(), flower.defaultBlockState().getSeed(pos), overlay, ModelData.EMPTY, RenderType.cutoutMipped());
+            this.manager.getModelRenderer().tesselateBlock(world, this.manager.getBlockModel(flower.defaultBlockState().setValue(DoublePlantBlock.HALF, DoubleBlockHalf.LOWER)), flower.defaultBlockState(), pos, matrixStack, vertexConsumerProvider.getBuffer(RenderType.cutoutMipped()), false, RandomSource.create(), flower.defaultBlockState().getSeed(pos), overlay, ModelData.EMPTY, RenderType.cutoutMipped());
         } else {
-            this.manager.getModelRenderer().tesselateBlock(world, this.manager.getBlockModel(flower.defaultBlockState().setValue(TallFlowerBlock.HALF, DoubleBlockHalf.UPPER)), flower.defaultBlockState(), pos, matrixStack, vertexConsumerProvider.getBuffer(RenderType.cutoutMipped()), false, RandomSource.create(), flower.defaultBlockState().getSeed(pos), overlay, ModelData.EMPTY, RenderType.cutoutMipped());
+            this.manager.getModelRenderer().tesselateBlock(world, this.manager.getBlockModel(flower.defaultBlockState().setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER)), flower.defaultBlockState(), pos, matrixStack, vertexConsumerProvider.getBuffer(RenderType.cutoutMipped()), false, RandomSource.create(), flower.defaultBlockState().getSeed(pos), overlay, ModelData.EMPTY, RenderType.cutoutMipped());
         }
     }
 }

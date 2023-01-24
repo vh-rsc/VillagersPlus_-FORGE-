@@ -102,7 +102,7 @@ public class AlchemistTableBlock extends WorkstationBlock {
             }
             case WEST -> {
                 d = (double)pos.getX() + 0.15D;
-                f = (double)pos.getZ() + 0.105D - 0.36D;
+                f = (double)pos.getZ() + 0.56D;
             }
         }
 

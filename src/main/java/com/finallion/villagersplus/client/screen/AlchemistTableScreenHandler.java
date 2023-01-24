@@ -56,51 +56,51 @@ public class AlchemistTableScreenHandler extends AbstractContainerMenu {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(p_39101_);
         if (slot != null && slot.hasItem()) {
-            ItemStack itemstack1 = slot.getItem();
-            itemstack = itemstack1.copy();
+            ItemStack itemstack2 = slot.getItem();
+            itemstack = itemstack2.copy();
             if ((p_39101_ < 0 || p_39101_ > 2) && p_39101_ != 3 && p_39101_ != 4) {
                 if (AlchemistTableScreenHandler.FuelSlot.matches(itemstack)) {
-                    if (this.moveItemStackTo(itemstack1, 4, 5, false) || this.ingredientSlot.mayPlace(itemstack1) && !this.moveItemStackTo(itemstack1, 3, 4, false)) {
+                    if (this.moveItemStackTo(itemstack2, 4, 5, false) || this.ingredientSlot.mayPlace(itemstack2) && !this.moveItemStackTo(itemstack2, 3, 4, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (this.ingredientSlot.mayPlace(itemstack1)) {
-                    if (!this.moveItemStackTo(itemstack1, 3, 4, false)) {
+                } else if (this.ingredientSlot.mayPlace(itemstack2)) {
+                    if (!this.moveItemStackTo(itemstack2, 3, 4, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (AlchemistTableScreenHandler.PotionSlot.matches(itemstack)) {
-                    if (!this.moveItemStackTo(itemstack1, 0, 3, false)) {
+                } else if (AlchemistTableScreenHandler.PotionSlot.matches(itemstack) && itemstack.getCount() == 1) {
+                    if (!this.moveItemStackTo(itemstack2, 0, 3, false)) {
                         return ItemStack.EMPTY;
                     }
                 } else if (p_39101_ >= 5 && p_39101_ < 32) {
-                    if (!this.moveItemStackTo(itemstack1, 32, 41, false)) {
+                    if (!this.moveItemStackTo(itemstack2, 32, 41, false)) {
                         return ItemStack.EMPTY;
                     }
                 } else if (p_39101_ >= 32 && p_39101_ < 41) {
-                    if (!this.moveItemStackTo(itemstack1, 5, 32, false)) {
+                    if (!this.moveItemStackTo(itemstack2, 5, 32, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (!this.moveItemStackTo(itemstack1, 5, 41, false)) {
+                } else if (!this.moveItemStackTo(itemstack2, 5, 41, false)) {
                     return ItemStack.EMPTY;
                 }
             } else {
-                if (!this.moveItemStackTo(itemstack1, 5, 41, true)) {
+                if (!this.moveItemStackTo(itemstack2, 5, 41, true)) {
                     return ItemStack.EMPTY;
                 }
 
-                slot.onQuickCraft(itemstack1, itemstack);
+                slot.onQuickCraft(itemstack2, itemstack);
             }
 
-            if (itemstack1.isEmpty()) {
+            if (itemstack2.isEmpty()) {
                 slot.set(ItemStack.EMPTY);
             } else {
                 slot.setChanged();
             }
 
-            if (itemstack1.getCount() == itemstack.getCount()) {
+            if (itemstack2.getCount() == itemstack.getCount()) {
                 return ItemStack.EMPTY;
             }
 
-            slot.onTake(p_39100_, itemstack1);
+            slot.onTake(p_39100_, itemstack2);
         }
 
         return itemstack;
@@ -119,13 +119,16 @@ public class AlchemistTableScreenHandler extends AbstractContainerMenu {
             super(inventory, i, j, k);
         }
 
-        public boolean mayPlaceItem(ItemStack stack) {
-            return matches(stack);
+        @Override
+        public boolean mayPlace(ItemStack p_40231_) {
+            return matches(p_40231_);
         }
 
         public int getMaxStackSize() {
             return 1;
         }
+
+
 
         public static boolean matches(ItemStack stack) {
             return stack.is(Items.GLASS_BOTTLE) || stack.is(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER).getItem());
@@ -137,8 +140,9 @@ public class AlchemistTableScreenHandler extends AbstractContainerMenu {
             super(inventory, i, j, k);
         }
 
-        public boolean mayPlaceItem(ItemStack stack) {
-            return matches(stack);
+        @Override
+        public boolean mayPlace(ItemStack p_40231_) {
+            return matches(p_40231_);
         }
 
         public int getMaxStackSize() {
@@ -158,8 +162,9 @@ public class AlchemistTableScreenHandler extends AbstractContainerMenu {
             super(inventory, i, j, k);
         }
 
-        public boolean mayPlaceItem(ItemStack stack) {
-            return matches(stack);
+        @Override
+        public boolean mayPlace(ItemStack p_40231_) {
+            return matches(p_40231_);
         }
 
         public static boolean matches(ItemStack stack) {

@@ -44,7 +44,7 @@ public class HorticulturistTableBlock extends WorkstationBlock {
         ItemStack itemStack = player.getItemInHand(hand);
 
         if (world.getBlockEntity(pos) instanceof HorticulturistTableBlockEntity blockEntity && state.getValue(FLOWERS) < 4) {
-            if (itemStack.is(ModTags.TALL_PLANTABLE_BLOCKS)) {
+            if (itemStack.is(ModTags.TALL_PLANTABLE_BLOCKS) && state.getValue(FLOWERS) == 0) {
                 if (!player.isCreative()) {
                     itemStack.shrink(1);
                 }

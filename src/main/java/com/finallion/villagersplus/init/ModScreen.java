@@ -12,7 +12,7 @@ public class ModScreen {
 
     public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(ForgeRegistries.MENU_TYPES, VillagersPlus.MOD_ID);
 
-    public final static RegistryObject<MenuType<?>> ALCHEMIST_TABLE_SCREEN_HANDLER = MENUS.register("alchemist_table_screen_handler", () ->
+    public final static RegistryObject<MenuType<AlchemistTableScreenHandler>> ALCHEMIST_TABLE_SCREEN_HANDLER = MENUS.register("alchemist_table_screen_handler", () ->
             new MenuType<>(AlchemistTableScreenHandler::new)
     );
 

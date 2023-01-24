@@ -8,11 +8,12 @@ import com.finallion.villagersplus.init.ModParticles;
 import com.finallion.villagersplus.init.ModScreen;
 import com.finallion.villagersplus.particles.BubbleParticle;
 import com.finallion.villagersplus.particles.ExperienceParticle;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 public class VillagersPlusClient {
@@ -20,6 +21,8 @@ public class VillagersPlusClient {
     public VillagersPlusClient() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
+
+        modEventBus.addListener(this::initScreens);
         modEventBus.addListener(this::initParticles);
         modEventBus.addListener(this::initBlockEntityRenderers);
     }
@@ -34,6 +37,13 @@ public class VillagersPlusClient {
     public void initBlockEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(ModBlocks.HORTICULTURIST_TABLE_BLOCK_ENTITY.get(), HorticulturistTableBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(ModBlocks.OCEANOGRAPHER_TABLE_BLOCK_ENTITY.get(), OceanographerTableBlockEntityRenderer::new);
+    }
+
+    @SubscribeEvent
+    public void initScreens(final FMLClientSetupEvent event) {
+        event.enqueueWork(() -> {
+            MenuScreens.register(ModScreen.ALCHEMIST_TABLE_SCREEN_HANDLER.get(), AlchemistTableScreen::new);
+        });
     }
 
     //HandledScreens.register(ModScreen.ALCHEMIST_TABLE_SCREEN_HANDLER, AlchemistTableScreen::new);

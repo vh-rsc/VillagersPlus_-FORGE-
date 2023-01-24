@@ -1,6 +1,7 @@
 package com.finallion.villagersplus.villagers;
 
 import com.finallion.villagersplus.VillagersPlus;
+import com.finallion.villagersplus.init.ModStructures;
 import com.finallion.villagersplus.villagers.trades.BuyTradeOffer;
 import com.finallion.villagersplus.villagers.trades.ItemsAndEmeraldsTradeOffer;
 import com.finallion.villagersplus.villagers.trades.SellPotionTradeOffer;
@@ -8,6 +9,7 @@ import com.finallion.villagersplus.villagers.trades.SellTradeOffer;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;

@@ -62,27 +62,27 @@ public class OceanographerTableBlock extends WorkstationBlock {
 
         if (world.getBlockEntity(pos) instanceof OceanographerTableBlockEntity blockEntity) {
                 if (itemStack.is(ModTags.AQUARIUM_PLANTABLE_BLOCKS) && state.getValue(CORALS) < 4) {
+                    blockEntity.insertCoral(itemStack, state.getValue(CORALS));
+
                     if (!player.isCreative()) {
                         itemStack.shrink(1);
                     }
 
-                    blockEntity.insertCoral(itemStack, state.getValue(CORALS));
                     if (!world.isClientSide()) {
                         world.setBlock(pos, state.setValue(CORALS, state.getValue(CORALS) + 1), 3);
                         world.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
                     }
 
                     return InteractionResult.sidedSuccess(world.isClientSide());
-                } else if (itemStack.getItem() instanceof MobBucketItem bucketItem && state.getValue(FISH) < 1) {
+                } else if (itemStack.getItem() instanceof MobBucketItem bucketItem && state.getValue(FISH) == 0) {
                     blockEntity.insertCoral(itemStack, 4);
 
                     if (!player.isCreative()) {
                         itemStack.shrink(1);
                     }
 
-
                     if (!world.isClientSide()) {
-                        world.setBlock(pos, state.setValue(FISH, state.getValue(FISH) + 1), 3);
+                        world.setBlock(pos, state.setValue(FISH, 1), 3);
                         world.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
                     }
 
