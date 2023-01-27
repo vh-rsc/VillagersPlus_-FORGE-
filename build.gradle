@@ -21,10 +21,6 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 
-mixin {
-    add sourceSets.main, "villagersplus.refmap.json"
-}
-
 version = '1.0'
 group = 'com.finallion.villagersplus' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'villagersplus'
@@ -164,12 +160,12 @@ dependencies {
 jar {
     manifest {
         attributes([
-                "Specification-Title"     : "villagersplus",
-                "Specification-Vendor"    : "villagersplus",
+                "Specification-Title"     : "examplemod",
+                "Specification-Vendor"    : "examplemodsareus",
                 "Specification-Version"   : "1", // We are version 1 of ourselves
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : project.jar.archiveVersion,
-                "Implementation-Vendor"   : "villagersplus",
+                "Implementation-Vendor"   : "examplemodsareus",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
                 "MixinConfigs": "villagersplus.mixins.json"
         ])
@@ -194,6 +190,11 @@ publishing {
         }
     }
 }
+
+mixin {
+    add sourceSets.main, "villagersplus.refmap.json"
+}
+
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation

@@ -45,11 +45,11 @@ public class HorticulturistTableBlock extends WorkstationBlock {
 
         if (world.getBlockEntity(pos) instanceof HorticulturistTableBlockEntity blockEntity && state.getValue(FLOWERS) < 4) {
             if (itemStack.is(ModTags.TALL_PLANTABLE_BLOCKS) && state.getValue(FLOWERS) == 0) {
+                blockEntity.insertFlower(itemStack, state.getValue(FLOWERS));
+
                 if (!player.isCreative()) {
                     itemStack.shrink(1);
                 }
-
-                blockEntity.insertFlower(itemStack, state.getValue(FLOWERS));
                 if (!world.isClientSide()) {
                     world.setBlock(pos, state.setValue(FLOWERS, 4).setValue(IS_TALL_FLOWER, true), 3);
                     world.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
@@ -57,11 +57,12 @@ public class HorticulturistTableBlock extends WorkstationBlock {
 
                 return InteractionResult.sidedSuccess(world.isClientSide());
             } else if (itemStack.is(ModTags.SMALL_PLANTABLE_BLOCKS)) {
+                blockEntity.insertFlower(itemStack, state.getValue(FLOWERS));
+
                 if (!player.isCreative()) {
                     itemStack.shrink(1);
                 }
 
-                blockEntity.insertFlower(itemStack, state.getValue(FLOWERS));
                 if (!world.isClientSide()) {
                     world.setBlock(pos, state.setValue(FLOWERS, state.getValue(FLOWERS) + 1).setValue(IS_TALL_FLOWER, false), 3);
                     world.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
