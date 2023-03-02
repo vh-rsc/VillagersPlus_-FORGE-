@@ -10,13 +10,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.TropicalFish;
@@ -30,16 +30,13 @@ import net.minecraft.world.level.block.CoralFanBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.model.data.ModelData;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
+import net.minecraftforge.client.model.data.EmptyModelData;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.util.Random;
 
 
 public class OceanographerTableBlockEntityRenderer implements BlockEntityRenderer<OceanographerTableBlockEntity> {
     private final BlockRenderDispatcher manager;
-    private final EntityRenderDispatcher entityRenderDispatcher;
     private final Minecraft minecraft;
     private float[] xOffset = new float[]{0.06F, 1.5F, 1.3F, 0.1F};
     private final float[] yOffsetNorth = new float[]{0.45F, 0.75F, 0.3F, 0.45F};
@@ -54,7 +51,6 @@ public class OceanographerTableBlockEntityRenderer implements BlockEntityRendere
     public OceanographerTableBlockEntityRenderer(BlockEntityRendererProvider.Context ctx) {
         this.minecraft = Minecraft.getInstance();
         this.manager = ctx.getBlockRenderDispatcher();
-        this.entityRenderDispatcher = ctx.getEntityRenderer();
     }
 
     public void render(OceanographerTableBlockEntity blockEntity, float f, PoseStack matrixStack, MultiBufferSource vertexConsumerProvider, int i, int j) {
@@ -156,7 +152,7 @@ public class OceanographerTableBlockEntityRenderer implements BlockEntityRendere
                         f = 0.0F;
                     }
 
-                    this.entityRenderDispatcher.render(fish, 0.0D, 0.0D, 0.0D, 0.0F, f, matrixStack, vertexConsumerProvider, i);
+                    Minecraft.getInstance().getEntityRenderDispatcher().render(fish, 0.0D, 0.0D, 0.0D, 0.0F, f, matrixStack, vertexConsumerProvider, i);
                 }
 
                 matrixStack.popPose();
@@ -165,7 +161,7 @@ public class OceanographerTableBlockEntityRenderer implements BlockEntityRendere
     }
 
     private void renderCoral(Block coral, Level world, BlockPos pos, PoseStack matrixStack, MultiBufferSource vertexConsumerProvider, int overlay) {
-        this.manager.getModelRenderer().tesselateBlock(world, this.manager.getBlockModel(coral.defaultBlockState()), coral.defaultBlockState(), pos, matrixStack, vertexConsumerProvider.getBuffer(RenderType.cutoutMipped()), false, RandomSource.create(), coral.defaultBlockState().getSeed(pos), overlay, ModelData.EMPTY, RenderType.cutoutMipped());
+        this.manager.getModelRenderer().tesselateBlock(world, this.manager.getBlockModel(coral.defaultBlockState()), coral.defaultBlockState(), pos, matrixStack, vertexConsumerProvider.getBuffer(RenderType.cutoutMipped()), false, new Random(), coral.defaultBlockState().getSeed(pos), overlay, EmptyModelData.INSTANCE);
     }
 }
 

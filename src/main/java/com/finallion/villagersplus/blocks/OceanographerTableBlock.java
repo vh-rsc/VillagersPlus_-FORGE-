@@ -5,7 +5,6 @@ import com.finallion.villagersplus.init.ModParticles;
 import com.finallion.villagersplus.init.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -30,6 +29,8 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 
+import java.util.Random;
+
 public class OceanographerTableBlock extends WorkstationBlock {
     public static final IntegerProperty CORALS;
     public static final IntegerProperty FISH;
@@ -46,7 +47,7 @@ public class OceanographerTableBlock extends WorkstationBlock {
     }
 
     @Override
-    public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
+    public void animateTick(BlockState state, Level world, BlockPos pos, Random random) {
         if (random.nextBoolean()) {
             double x = pos.getX() + 0.1D + (pos.getX() + 0.9D - (pos.getX() + 0.1D)) * random.nextDouble();
             double y = pos.getY() + 0.1D + (pos.getY() + 0.4D - (pos.getY() + 0.1D)) * random.nextDouble();

@@ -10,7 +10,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class ModScreen {
 
-    public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(ForgeRegistries.MENU_TYPES, VillagersPlus.MOD_ID);
+    public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(ForgeRegistries.CONTAINERS, VillagersPlus.MOD_ID);
 
     public final static RegistryObject<MenuType<AlchemistTableScreenHandler>> ALCHEMIST_TABLE_SCREEN_HANDLER = MENUS.register("alchemist_table_screen_handler", () ->
             new MenuType<>(AlchemistTableScreenHandler::new)

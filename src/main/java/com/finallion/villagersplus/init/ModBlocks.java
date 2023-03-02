@@ -25,7 +25,7 @@ import java.util.function.Supplier;
 
 public class ModBlocks {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, VillagersPlus.MOD_ID);
-    public static final DeferredRegister<BlockEntityType<?>> TILE_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, VillagersPlus.MOD_ID);
+    public static final DeferredRegister<BlockEntityType<?>> TILE_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, VillagersPlus.MOD_ID);
 
     public static final RegistryObject<Block> ALCHEMIST_TABLE_BLOCK = BLOCKS.register("alchemist_table", () -> new AlchemistTableBlock(BlockBehaviour.Properties.of(Material.METAL).strength(0.5F).lightLevel((state) -> 1).noOcclusion()));
     public static final RegistryObject<Block> OCEANOGRAPHER_TABLE_BLOCK = BLOCKS.register("oceanographer_table", () -> new OceanographerTableBlock(BlockBehaviour.Properties.of(Material.GLASS).strength(0.5F).lightLevel((state) -> 12).noOcclusion().isViewBlocking((state, world, pos) -> false).isSuffocating((state, world, pos) -> false)));
@@ -35,7 +35,7 @@ public class ModBlocks {
     public static final RegistryObject<Block> JUNGLE_HORTICULTURIST_TABLE_BLOCK = BLOCKS.register("jungle_horticulturist_table", () -> new HorticulturistTableBlock(BlockBehaviour.Properties.of(Material.WOOD).strength(0.5F).noOcclusion()));
     public static final RegistryObject<Block> SPRUCE_HORTICULTURIST_TABLE_BLOCK = BLOCKS.register("spruce_horticulturist_table", () -> new HorticulturistTableBlock(BlockBehaviour.Properties.of(Material.WOOD).strength(0.5F).noOcclusion()));
     public static final RegistryObject<Block> BIRCH_HORTICULTURIST_TABLE_BLOCK = BLOCKS.register("birch_horticulturist_table", () -> new HorticulturistTableBlock(BlockBehaviour.Properties.of(Material.WOOD).strength(0.5F).noOcclusion()));
-    public static final RegistryObject<Block> MANGROVE_HORTICULTURIST_TABLE_BLOCK = BLOCKS.register("mangrove_horticulturist_table", () -> new HorticulturistTableBlock(BlockBehaviour.Properties.of(Material.WOOD).strength(0.5F).noOcclusion()));
+    //public static final RegistryObject<Block> MANGROVE_HORTICULTURIST_TABLE_BLOCK = BLOCKS.register("mangrove_horticulturist_table", () -> new HorticulturistTableBlock(BlockBehaviour.Properties.of(Material.WOOD).strength(0.5F).noOcclusion()));
     public static final RegistryObject<Block> CRIMSON_HORTICULTURIST_TABLE_BLOCK = BLOCKS.register("crimson_horticulturist_table", () -> new HorticulturistTableBlock(BlockBehaviour.Properties.of(Material.WOOD).strength(0.5F).noOcclusion()));
     public static final RegistryObject<Block> WARPED_HORTICULTURIST_TABLE_BLOCK = BLOCKS.register("warped_horticulturist_table", () -> new HorticulturistTableBlock(BlockBehaviour.Properties.of(Material.WOOD).strength(0.5F).noOcclusion()));
     public static final RegistryObject<Block> OCCULTIST_TABLE_BLOCK = BLOCKS.register("occultist_table", () -> new OccultistTableBlock(BlockBehaviour.Properties.of(Material.STONE).strength(0.5F).lightLevel((state) -> state.getValue(OccultistTableBlock.FILLING) * 2).noOcclusion()));
@@ -64,7 +64,7 @@ public class ModBlocks {
                     JUNGLE_HORTICULTURIST_TABLE_BLOCK.get(),
                     SPRUCE_HORTICULTURIST_TABLE_BLOCK.get(),
                     BIRCH_HORTICULTURIST_TABLE_BLOCK.get(),
-                    MANGROVE_HORTICULTURIST_TABLE_BLOCK.get(),
+                    //MANGROVE_HORTICULTURIST_TABLE_BLOCK.get(),
                     CRIMSON_HORTICULTURIST_TABLE_BLOCK.get(),
                     WARPED_HORTICULTURIST_TABLE_BLOCK.get()).build(null)
     );

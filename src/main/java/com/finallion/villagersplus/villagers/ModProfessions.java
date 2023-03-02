@@ -12,16 +12,16 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class ModProfessions {
 
-    public static final DeferredRegister<VillagerProfession> VILLAGER_PROFESSIONS = DeferredRegister.create(ForgeRegistries.VILLAGER_PROFESSIONS, VillagersPlus.MOD_ID);
+    public static final DeferredRegister<VillagerProfession> VILLAGER_PROFESSIONS = DeferredRegister.create(ForgeRegistries.PROFESSIONS, VillagersPlus.MOD_ID);
 
     public static RegistryObject<VillagerProfession> HORTICULTURIST = VILLAGER_PROFESSIONS.register("horticulturist", () ->
-                new VillagerProfession("horticulturist", holder -> holder.value().equals(ModPointOfInterestType.HORTICULTURIST_POI.get()), holder -> holder.value().equals(ModPointOfInterestType.HORTICULTURIST_POI.get()), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_FARMER));
+                new VillagerProfession("horticulturist", ModPointOfInterestType.HORTICULTURIST_POI.get(), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_FARMER));
     public static RegistryObject<VillagerProfession> OCCULTIST = VILLAGER_PROFESSIONS.register("occultist", () ->
-                new VillagerProfession("occultist", holder -> holder.value().equals(ModPointOfInterestType.OCCULTIST_POI.get()), holder -> holder.value().equals(ModPointOfInterestType.OCCULTIST_POI.get()), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_CLERIC));
+                new VillagerProfession("occultist", ModPointOfInterestType.OCCULTIST_POI.get(), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_CLERIC));
     public static RegistryObject<VillagerProfession> OCEANOGRAPHER = VILLAGER_PROFESSIONS.register("oceanographer", () ->
-                new VillagerProfession("oceanographer", holder -> holder.value().equals(ModPointOfInterestType.OCEANOGRAPHER_POI.get()), holder -> holder.value().equals(ModPointOfInterestType.OCEANOGRAPHER_POI.get()), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.BUCKET_FILL));
+                new VillagerProfession("oceanographer", ModPointOfInterestType.OCEANOGRAPHER_POI.get(), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.BUCKET_FILL));
     public static RegistryObject<VillagerProfession> ALCHEMIST = VILLAGER_PROFESSIONS.register("alchemist", () ->
-                new VillagerProfession("alchemist", holder -> holder.value().equals(ModPointOfInterestType.ALCHEMIST_POI.get()), holder -> holder.value().equals(ModPointOfInterestType.ALCHEMIST_POI.get()), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_CLERIC));
+                new VillagerProfession("alchemist", ModPointOfInterestType.ALCHEMIST_POI.get(), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_CLERIC));
 
 
 

@@ -11,7 +11,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.InclusiveRange;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
@@ -29,6 +28,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
+
+import java.util.Random;
 
 public class OccultistTableBlock extends WorkstationBlock {
     public static final IntegerProperty FILLING;
@@ -89,7 +90,7 @@ public class OccultistTableBlock extends WorkstationBlock {
         return true;
     }
 
-    public static <T extends ParticleOptions> void createParticleSpiral(Level world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, int length, T type, RandomSource random) {
+    public static <T extends ParticleOptions> void createParticleSpiral(Level world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, int length, T type, Random random) {
         double yCoord = y + 1.1D; // top of block
 
         for (int i = 0; i < length; i++) {
@@ -103,7 +104,7 @@ public class OccultistTableBlock extends WorkstationBlock {
         }
     }
 
-    public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
+    public void animateTick(BlockState state, Level world, BlockPos pos, Random random) {
         if (state.getValue(FILLING) > 0 && random.nextInt(3) == 0) {
             world.addParticle(ModParticles.EXPERIENCE_PARTICLE.get(), pos.getX() + 0.5D + random.nextDouble() - random.nextDouble(), pos.getY() + 1.0D + random.nextDouble(), pos.getZ() + 0.5D + random.nextDouble() - random.nextDouble(), 0.0D, 0.05D, 0.0D);
         }
@@ -114,7 +115,7 @@ public class OccultistTableBlock extends WorkstationBlock {
         if (!state.is(newState.getBlock())) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof OccultistTableBlockEntity table && !world.isClientSide()) {
-                this.tryDropExperience((ServerLevel) world, pos, ItemStack.EMPTY, ConstantInt.of(table.getLevels()));
+                this.popExperience((ServerLevel) world, pos, table.getLevels());
             }
 
             super.onRemove(state, world, pos, newState, moved);

@@ -42,7 +42,7 @@ public class ModTrades {
             trades.get(2).add(new SellTradeOffer(Items.AZALEA_LEAVES, 4, 2, 3));
             trades.get(2).add(new SellTradeOffer(Items.DARK_OAK_LEAVES, 4, 2, 3));
             trades.get(2).add(new SellTradeOffer(Items.JUNGLE_LEAVES, 4, 2, 3));
-            trades.get(2).add(new SellTradeOffer(Items.MANGROVE_LEAVES, 4, 2, 3));
+            //trades.get(2).add(new SellTradeOffer(Items.MANGROVE_LEAVES, 4, 2, 3));
             trades.get(2).add(new SellTradeOffer(Items.OAK_LEAVES, 4, 2, 3));
             trades.get(2).add(new ItemsAndEmeraldsTradeOffer(Items.STICK, 3, Items.DEAD_BUSH, 1, 8, 4));
             trades.get(2).add(new BuyTradeOffer(Items.GRASS, 4, 12, 3));

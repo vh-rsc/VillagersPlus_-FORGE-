@@ -1,6 +1,5 @@
 package com.finallion.villagersplus.villagers.trades;
 
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.Item;
@@ -10,6 +9,7 @@ import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.ItemLike;
 
 import javax.annotation.Nullable;
+import java.util.Random;
 
 public class ItemsAndEmeraldsTradeOffer implements VillagerTrades.ItemListing {
     private final ItemStack fromItem;
@@ -37,7 +37,7 @@ public class ItemsAndEmeraldsTradeOffer implements VillagerTrades.ItemListing {
     }
 
     @Nullable
-    public MerchantOffer getOffer(Entity p_219696_, RandomSource p_219697_) {
+    public MerchantOffer getOffer(Entity p_219696_, Random p_219697_) {
         return new MerchantOffer(new ItemStack(Items.EMERALD, this.emeraldCost), new ItemStack(this.fromItem.getItem(), this.fromCount), new ItemStack(this.toItem.getItem(), this.toCount), this.maxUses, this.villagerXp, this.priceMultiplier);
     }
 }

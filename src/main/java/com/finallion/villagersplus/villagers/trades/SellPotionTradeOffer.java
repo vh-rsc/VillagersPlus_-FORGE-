@@ -2,7 +2,6 @@ package com.finallion.villagersplus.villagers.trades;
 
 
 import net.minecraft.core.Registry;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.Item;
@@ -16,6 +15,7 @@ import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class SellPotionTradeOffer implements VillagerTrades.ItemListing {
@@ -36,7 +36,7 @@ public class SellPotionTradeOffer implements VillagerTrades.ItemListing {
     }
 
 
-    public MerchantOffer getOffer(Entity entity, RandomSource random) {
+    public MerchantOffer getOffer(Entity entity, Random random) {
         ItemStack itemStack = new ItemStack(Items.EMERALD, this.price);
         List<Potion> list = (List) Registry.POTION.stream().filter((potionx) -> {
             return !potionx.getEffects().isEmpty() && PotionBrewing.isBrewablePotion(potionx);

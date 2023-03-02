@@ -8,6 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.ContainerHelper;
@@ -161,7 +162,7 @@ public class AlchemistTableBlockEntity extends BaseContainerBlockEntity implemen
 
 
     protected Component getDefaultName() {
-        return Component.translatable("container.alchemist_table");
+        return new TranslatableComponent("container.alchemist_table");
     }
 
     public int getContainerSize() {
